@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>打地鼠</title>
+<script src="./js/jquery-3.3.1.min.js"></script>
+<style>
+    * { margin: 0; padding: 0; }
+    #box {
+        margin: 10px;
+    }
+    #burrow tr td {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+    .mouse {
+        background:url('./pic/mouse.png') no-repeat;
+        background-size:contain;
+    }
+    .cat {
+        background:url('./pic/cat.png') no-repeat;
+        background-size:contain;
+    }
+    #start {
+        padding: 4px 8px;
+    }
+    #info {
+        height: 24px;
+        color: #ff0000;
+    }
+</style>
+</head>
+<body>
+    <div id="box">
+        <p id="info"></p>
+        <table id="burrow" border="1"></table>
+        <button type="button" id="start">开始</button>
+    </div>
+</body>
+</html>
+<script language="JavaScript">
+
+    // 对象类型
+    var Animals = [ 'mouse', 'cat' ];
+
+    // 级别对应速度
+    var levelist = [
+        { t1 : 2000, t2 : 3000 },
+        { t1 : 1000, t2 : 2000 },
+        { t1 : 800,  t2 : 1000 },
+        { t1 : 500,  t2 : 800 },
+    ];
+
+    var length = 6,      // 边长
+        level,           // 级别
+        kill,            // 杀死
+        miss,            // 漏掉
+        over,            // 游戏结束
+        nums,            // 空白地洞
+        d1, d2;          // 定时器
+
+    // 初始化
+    function init() {
+        clearInterval( d1 );
+        clearInterval( d2 );
+        level = 1; kill = 0; miss = 0; over = 0;
+        var html = '', i = 0;
+        for( var t1 = 0; t1 < length; t1++ ) {
+            html += '<tr>';
+            for( var t2 = 0; t2 < length; t2++ ) {
+                html += '<td data-id="' + i + '"></td>';
+                i++;
+            }
+            html += '</tr>';
+        }
+        $("#burrow").html( html );
+        nums = [];
+        for( i = 0; i < length * length; i++ ) {
+            nums.push( i );
+        }
+    }
+
+    // 开始
+    function start() {
+        init();
+        d1 = setInterval( function() {
+            var k = Math.floor( Math.random() * ( nums.length) );
+            var num = nums[ k ];
+            nums.splice( k, 1 );
+            var type = Math.floor( Math.random() * Animals.length );
+            $( $("#burrow tr td")[num] ).attr( 'data-type', type );
+            $( $("#burrow tr td")[num] ).attr( 'class', Animals[type] );
+            setTimeout( function() {
+                var td = $( $("#burrow tr td")[num] );
+                td.removeAttr( 'data-type' );
+                td.removeAttr( 'class' );
+                if( type == 0 && td.attr('data-kill')!='1' ) {
+                    miss ++;
+                    if( miss >= 5 ) {
+                        clearInterval( d1 );
+                        setTimeout( function(){
+                            clearInterval( d2 );
+                        }, 600 );
+                        if( over == 0 ) {
+                            alert( '逃跑了太多可恶的老鼠' );
+                        }
+                        over = 1;
+                        return ;
+                    }
+                }
+                nums.push( num );
+                return ;
+            }, levelist[level-1].t1 );
+        }, levelist[level-1].t1 );
+        d2 = setInterval( function(){
+            var html = '难度级别:'+level+'&nbsp;&nbsp;&nbsp;&nbsp;杀死:'+kill+'&nbsp;&nbsp;&nbsp;&nbsp;漏掉:'+miss+'/5';
+            $("#info").html( html );
+            return ;
+        }, 500 );
+    }
+
+    // 锤子打击
+    $( document ).on( 'click', '#burrow tr td', function(e) {
+        var type = parseInt( $(e.target).attr( 'data-type' ) );
+        if( type == 1 ) {
+            clearInterval( d1 );
+            clearInterval( d2 );
+            alert( '猫咪是我们的好朋友' );
+        } else if( type == 0 ) {
+            kill ++;
+            if( kill % 20 == 0 ) {
+                level = Math.min( level + 1, levelist.length );
+            }
+            $(e.target).attr( 'data-kill', 1 );
+            $(e.target).removeAttr( 'data-type' );
+            $(e.target).removeAttr( 'class' );
+            $(e.target).text( 'X' );
+            setTimeout( function() {
+                $(e.target).text( '' );
+            }, 200 );
+        }
+        return ;
+    } );
+
+    $( document ).ready( function(){
+        init();
+    } );
+
+    $("#start").on('click', function(){
+        start();
+    });
+
+</script>
