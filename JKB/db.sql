@@ -17,11 +17,5 @@ create table temp_information (
     primary key( m_ID )
 )engine=myisam default charset=utf8 comment '爬取资讯临时存储';
 
-
-
-
-
-
-
-
-
+alter table temp_information change m_Form m_From varchar(255) default '' comment '来源';
+alter table temp_information add m_OriginalURL varchar(255) default '' comment '原网页';

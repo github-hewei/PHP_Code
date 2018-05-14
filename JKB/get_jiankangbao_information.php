@@ -126,7 +126,7 @@ foreach( $infor_list as $key => $value ) {
     fwrite( $h2, $value['id'] . "\n" );
 
     // 写入SQL文件
-    $tpl = "INSERT INTO temp_information (m_Type, m_OtherID, m_Title, m_Cover, m_Form, m_Body, m_PublishTime) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');\n";
+    $tpl = "INSERT INTO temp_information (m_Type, m_OtherID, m_Title, m_Cover, m_From, m_Body, m_PublishTime, m_OriginalURL ) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\n";
     $sql = sprintf( $tpl, $value['type']
         , mysql_real_escape_string( $value['id'] )
         , mysql_real_escape_string( $value['title'] )
@@ -134,6 +134,7 @@ foreach( $infor_list as $key => $value ) {
         , mysql_real_escape_string( $from )
         , mysql_real_escape_string( $content )
         , mysql_real_escape_string( $datetime )
+        , mysql_real_escape_string( $value['url'] )
     );
 
     fwrite( $h1, $sql );
