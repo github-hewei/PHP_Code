@@ -89,18 +89,18 @@ $sql = "INSERT INTO jicai_drugs ( RN, ID, NAME_CHN, TRADE_NAME, DOSEAGE_FORM_NAM
 foreach( $drugs as $k => $line ) {
     $tpl = "( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ),";
     $sql .= sprintf( $tpl
-                     , mysql_real_escape_string( $line['RN'] )
-                     , mysql_real_escape_string( $line['ID'] )
-                     , mysql_real_escape_string( $line['NAME_CHN'] )
-                     , mysql_real_escape_string( $line['TRADE_NAME'] )
-                     , mysql_real_escape_string( $line['DOSEAGE_FORM_NAME'] )
-                     , mysql_real_escape_string( $line['SPEC'] )
-                     , mysql_real_escape_string( $line['WRAP_NAME'] )
-                     , mysql_real_escape_string( $line['PERMIT_NUMBER'] )
-                     , mysql_real_escape_string( $line['STAND_RATE'] )
-                     , mysql_real_escape_string( $line['PRODUCT_ID'] )
-                     , mysql_real_escape_string( $line['BID_ORGID'] )
-                     , mysql_real_escape_string( $line['ORG_NAME'] ) );
+                     , addslashes( $line['RN'] )
+                     , addslashes( $line['ID'] )
+                     , addslashes( $line['NAME_CHN'] )
+                     , addslashes( $line['TRADE_NAME'] )
+                     , addslashes( $line['DOSEAGE_FORM_NAME'] )
+                     , addslashes( $line['SPEC'] )
+                     , addslashes( $line['WRAP_NAME'] )
+                     , addslashes( $line['PERMIT_NUMBER'] )
+                     , addslashes( $line['STAND_RATE'] )
+                     , addslashes( $line['PRODUCT_ID'] )
+                     , addslashes( $line['BID_ORGID'] )
+                     , addslashes( $line['ORG_NAME'] ) );
     if( ($k+1) % 1000 === 0 ) {
         echo "Write SQL ...\n";
         $sql = substr( $sql, 0, -1 ) . ";\n";
@@ -171,11 +171,11 @@ foreach( $hosps as $JC_ID => $line ) {
     foreach( $line as $v ) {
         $tpl = "( '%s', '%s', '%s', '%s', '%s' ),";
         $sql .= sprintf( $tpl
-                         , mysql_real_escape_string( $v['RN'] )
-                         , mysql_real_escape_string( $JC_ID )
-                         , mysql_real_escape_string( $v['ID'] )
-                         , mysql_real_escape_string( $v['NAME'] )
-                         , mysql_real_escape_string( $v['PRICE'] ) );
+                         , addslashes( $v['RN'] )
+                         , addslashes( $JC_ID )
+                         , addslashes( $v['ID'] )
+                         , addslashes( $v['NAME'] )
+                         , addslashes( $v['PRICE'] ) );
         $i++;
         if( $i % 1000 === 0 ) {
             echo "Write SQL ...\n";
