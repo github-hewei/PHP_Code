@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+    <div id="container" style="height:700px;width:800px;background:#000;position:relative;">
+        <div id="ball" style="width:20px;height:20px;border-radius:10px;position:absolute;left:400px;background: #fff;"></div>
+    </div>
+</body>
+</html>
+<script language="JavaScript">
+        
+    var StartTime;      // 开始时间
+    var StartTop = 600; // 初始高度
+    var Less = 0.8;     // 衰减系数
+    var G = 800;        // 重力加速度
+    var hTime;          // 定时器
+
+    function bh(h) {
+        var ball = document.getElementById('ball');
+        ball.style.top = (700 - h - 20) + 'px';
+    }
+
+    // 计算位置函数
+    function Calc(t,    // 时间跨度
+                  h,    // 运动高度
+                  fx) { // 方向
+        // 如果运动距离小于1 结束运动
+        if( h < 1 ) {
+            clearInterval(hTime);
+        }
+
+        // 根据运动距离计算出运动需要的总时间
+        var subt = Math.sqrt( parseFloat( h ) * 2 / G );
+        
+        // 如果当前时间超过了总时间
+        // 那么就进入了之后的运动 下落或者弹起
+        if( subt < t ) {
+            fx = !fx
+            return Calc( t - subt, fx ? h : h * Less * Less, fx );
+        }
+        if( fx ) { // 下落运动
+            return 0.5 * G * t * t + StartTop - h;
+        } else { // 上抛
+            return 0.5 * G * (subt - t) * (subt - t) + StartTop - h;
+        }
+    }
+
+
+    bh( StartTop );
+    StartTime = new Date().getTime();
+    hTime = setInterval(function () {
+        var t = parseFloat( (new Date().getTime()) - StartTime ) / 1000.0;
+        var S = Calc( t, StartTop, true );
+        bh( StartTop - S );
+    },20);
+
+</script>
